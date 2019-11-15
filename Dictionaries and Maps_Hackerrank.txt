@@ -1,0 +1,17 @@
+if __name__=="__main__":
+    n = int(input())
+    phonebook={}
+    for i in range(n):
+        entry = input().split()
+        phonebook[entry[0]]=entry[1]
+    while(True):
+        try:
+            search_name = input()
+        except EOFError:
+            break
+        
+        if(search_name in phonebook):
+            string = "%s=%s"%(search_name,phonebook[search_name])
+            print(string)
+        else:
+            print("Not found")
