@@ -1,0 +1,76 @@
+from pyspark import SparkContext
+from pyspark.streaming import StreamingContext
+
+sc = SparkContext("master/local[*]", appnName = "NetworkWordCount")
+ssc = StreamingContext(sc,1)
+
+lines = ssc.socketTextStream("localhost",9999)/ssc.textFileStream(path_of_file) Note: Python API has only textFileStream object
+words = lines.flatMap(lambda line: line.split(" "))
+wordmap = words.map(lambda word:(word,1))
+wordcount = wordmap.reduceByKey(lambda x,y : x+y)
+ssc.pprint()
+
+ssc.start()
+ssc.awaitTermination()/ssc.stop()/ssc.stop(stopSparkContext = False)
+
+
+
+Additional code:
+ windowedWordCounts = pairs.reduceByKeyAndWindow(lambda x, y: x + y, lambda x, y: x - y, 30, 10) - to set up a windowed fucntion, captures words from the last 30 secs at an interval of 10 secs. Here lambda x, y: x - y is optional as it is just used to reduce the newly introduced words.
+-------------------------------------------------------------------------------------------------------
+windowedStream1 = stream1.window(20)
+windowedStream2 = stream2.window(60)
+joinedStream = windowedStream1.join(windowedStream2)- to join data from two streams
+-------------------------------------------------------------------------------------------------------
+dataset = ... # some RDD
+windowedStream = stream.window(20)
+joinedStream = windowedStream.transform(lambda rdd: rdd.join(dataset)) - this is to join a stream with already existing dataset, here we can have the dataset as dynamic as the operation in transform consider only the current dataset available/pointed by spark context
+-------------------------------------------------------------------------------------------------------
+pprint()/saveAsTextFiles(prefix, [suffix]) - to save the output to a file or just print 
+-------------------------------------------------------------------------------------------------------
+def sendPartition(iter):
+    # ConnectionPool is a static, lazily initialized pool of connections
+    connection = ConnectionPool.getConnection()
+    for record in iter:
+        connection.send(record)
+    # return to the pool for future reuse
+    ConnectionPool.returnConnection(connection)
+
+dstream.foreachRDD(lambda rdd: rdd.foreachPartition(sendPartition))
+-------------------------------------------------------------------------------------------------------
+# Lazily instantiated global instance of SparkSession
+def getSparkSessionInstance(sparkConf):
+    if ("sparkSessionSingletonInstance" not in globals()):
+        globals()["sparkSessionSingletonInstance"] = SparkSession \
+            .builder \
+            .config(conf=sparkConf) \
+            .getOrCreate()
+    return globals()["sparkSessionSingletonInstance"]
+
+...
+
+# DataFrame operations inside your streaming program
+
+words = ... # DStream of strings
+
+def process(time, rdd):
+    print("========= %s =========" % str(time))
+    try:
+        # Get the singleton instance of SparkSession
+        spark = getSparkSessionInstance(rdd.context.getConf())
+
+        # Convert RDD[String] to RDD[Row] to DataFrame
+        rowRdd = rdd.map(lambda w: Row(word=w))
+        wordsDataFrame = spark.createDataFrame(rowRdd)
+
+        # Creates a temporary view using the DataFrame
+        wordsDataFrame.createOrReplaceTempView("words")
+
+        # Do word count on table using SQL and print it
+        wordCountsDataFrame = spark.sql("select word, count(*) as total from words group by word")
+        wordCountsDataFrame.show()
+    except:
+        pass
+
+words.foreachRDD(process)
+-------------------------------------------------------------------------------------------------------

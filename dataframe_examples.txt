@@ -1,0 +1,66 @@
+from pyspark import SparkSession
+from pyspark.sql import functions
+from pyspark.sql.window import Window
+from pyspark.sql.types import *
+
+spark  = SparkSession.builder.appName("DataFrame_example").enableHiveSupport.config("config_key","config_value")getOrCreate()
+
+json_df = spark.read.json/parquet/csv/orc/libsvm/default(for only parquet data files)("file_path on hdfs or client node")
+#to convert rdd with RDD[Row] type to dataframe. eg. word_rdd = words.map(lambda w: Row(word=w[0], name = word[1])), this will create a dataframe with column word having contents of rdd - words - use function spark.createDataFrame(word_rdd)
+OR
+# The schema is encoded in a string.
+schemaString = "name age"
+fields = [StructField(field_name, StringType(), True) for field_name in schemaString.split()]
+schema = StructType(fields)
+json_df.show()
+/_________________________________________________________________________________
+json_df.printSchema() - to print theschema of the dataframe
+df.select("colun_name").show() - to print data of particular coolumns
+df.select(df['name'],df['age']+1).show() - to print all rows with updated age
+df.filter(df['age'] > 20).show() - show people having age more than 20
+df.groupBy('name').count(df['age']).show() - grouping people on the basis of name and count the age of the people
+df.createOrReplaceTempView("json") - converts dataframe to SQL object
+spark.sql("select * from json")
+df.createGolbalTempView("global_json")
+spark.sql("select * from global_temp.golbal_json") - here the global temp view is session independent, terminates only with application, resides in global_temp database, eg. spark.newSession().sql("SELECT * FROM global_temp.global_json").show()
+_________________________________________________________________________________
+If we want to convert dataframe back to rdd
+teennames = teengaers.rdd.map(lambda p : "name is '+p.name).collect()
+for name in teennames:
+	print(name)
+_________________________________________________________________________________
+df.select("name", "age").write.mode("append").partitionBy("Date").save("namesAndAges.parquet", format="parquet") - to save data into files
+df.select("name", "age").write.mode("append").partitionBy("Date").saveAsTable("output_table_name") - this will store the data in hive table
+df.write.option("path", "/some/path").saveAsTable("t") - here this is for file based table - means custom output path otherwise in warehouse directory
+df.write.bucketBy(42, "name").sortBy("age").saveAsTable("people_bucketed") - to bucket the hive table
+peopleDF.write.parquet("people.parquet") - to write the dataframe object directly to parquet file
+mergedDF = spark.read.option("mergeSchema", "true").parquet("data/test_table") -  to combine the schema of all the files present in test_table directory
+_________________________________________________________________________________
+#### reading and writing to jdbc
+jdbcdf = spark.read.format("url","jdbc:postgres.dbserver").format("dbtable","schema.table_name").format("user","username").format("password","password").load()
+jdbcdf2 = spark.read.jdbc("jdbc:postgres.dbserver","schema.table_name", properties = {"user":"username","password":"password"} )
+
+jdbcdf = spark.write.format("url","jdbc:postgres.dbserver").format("dbtable","schema.table_name").format("user","username").format("password","password").save()
+jdbcdf2 = spark.write.option("table_name", "name CHAR(64), comments VARCHAR(1024)").jdbc("jdbc:postgres.dbserver","schema.table_name", properties = {"user":"username","password":"password"} )
+__________________________________________________________________________________
+import sys
+from pyspark.sql.window import Window
+import pyspark.sql.functions as func
+windowSpec = \
+  Window 
+    .partitionBy(df['category']) \
+    .orderBy(df['revenue'].desc()) \
+    .rangeBetween(-sys.maxsize, sys.maxsize)
+dataFrame = sqlContext.table("productRevenue")
+revenue_difference = \
+  (func.max(dataFrame['revenue']).over(windowSpec) - dataFrame['revenue'])
+dataFrame.select(
+  dataFrame['product'],
+  dataFrame['category'],
+  dataFrame['revenue'],
+  revenue_difference.alias("revenue_difference"))
+____________________________________________________________________________________
+
+
+
+
