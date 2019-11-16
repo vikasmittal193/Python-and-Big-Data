@@ -1,3 +1,5 @@
+Hour Glasss problem of Hackerank
+
 #!/bin/python3
 
 import math
