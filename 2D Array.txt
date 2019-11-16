@@ -1,0 +1,42 @@
+#!/bin/python3
+
+import math
+import os
+import random
+import re
+import sys
+
+
+
+if __name__ == '__main__':
+    arr = []
+
+    for _ in range(6):
+        arr.append(list(map(int, input().rstrip().split())))
+    res_array=[]
+    for i in range(len(arr)-2):
+        for j in range(len(arr[i])-2):
+            hrgls_arr = []
+            hrgls_arr.append(arr[i][j])
+            hrgls_arr.append(arr[i][j+1])
+            hrgls_arr.append(arr[i][j+2])
+            hrgls_arr.append(arr[i+1][j+1])
+            hrgls_arr.append(arr[i+2][j])
+            hrgls_arr.append(arr[i+2][j+1])
+            hrgls_arr.append(arr[i+2][j+2])
+            res_array.append(hrgls_arr)
+        #print(hrgls_arr)
+    flag,sum_arr=0,[]
+    for arr in res_array:
+        sum_a=0
+        for ele in arr:
+            sum_a+=ele
+        if(flag==0):
+            max_sum=sum_a
+        if(sum_a > max_sum):
+            max_sum=sum_a
+        sum_arr.append(sum_a)
+        flag=1
+    #print(res_array)
+    #print(sum_arr)
+    print(max_sum)

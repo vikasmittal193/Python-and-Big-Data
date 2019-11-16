@@ -1,0 +1,31 @@
+#!/bin/python3
+
+import math
+import os
+import random
+import re
+import sys
+
+
+
+if __name__ == '__main__':
+    n = int(input())
+    bin_n = bin(n).replace('0b','')
+    bin_n = list(bin_n)
+    #print(bin_n)
+    max_cons,count,flag = 0,0,0
+    for i in range(len(bin_n)):
+        if(bin_n[i]=='1'):
+            count+=1
+        else:
+            #print(count)
+            if(flag==0):
+                max_cons = count
+            if((count>=1)):
+                count=0
+            flag=1
+    #print(max_cons,count)
+    if(max_cons>count):
+        print(max_cons)
+    else:
+        print(count)
