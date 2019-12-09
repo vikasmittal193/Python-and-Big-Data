@@ -1,0 +1,22 @@
+#Squares of a Sorted Array
+
+#solution using bubble sort
+class Solution:
+    def sortedSquares(self, A: List[int]) -> List[int]:
+        if(1 <= len(A) <= 10000):
+            squared_arr = [x**2 for x in A]
+            if(len(squared_arr)==1):
+                return squared_arr
+            for i in range(0,len(squared_arr)-1):
+                for j in range(i+1,len(squared_arr)):
+                    if(squared_arr[i]>squared_arr[j]):
+                        temp = squared_arr[i]
+                        squared_arr[i] =squared_arr[j]
+                        squared_arr[j]=temp
+            return squared_arr
+
+#more optimum solution
+class Solution:
+    def sortedSquares(self, A: List[int]) -> List[int]:
+        if(1 <= len(A) <= 10000):
+            return sorted([x**2 for x in A])
