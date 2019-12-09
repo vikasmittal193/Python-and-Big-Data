@@ -1,0 +1,33 @@
+# Rotate array to its right k times
+class Solution:
+    def rotate(self, nums: List[int], k: int) -> None:
+        """
+        Do not return anything, modify nums in-place instead.
+        """
+        #using the swap functionality
+        n = len(nums)
+        for j in range(0,k):
+            last = nums[n-1]
+            for i in range(n-1,-1,-1):
+                nums[i] = nums[i-1]
+            nums[0]=last
+            
+#Time complexity : O(n)
+#Auxiliary Space : O(d)        
+
+# Rotate array to its left k times
+class Solution:
+    def rotate(self, nums: List[int], k: int) -> None:
+        """
+        Do not return anything, modify nums in-place instead.
+        """
+        #using the swap functionality
+        n = len(nums)
+        for j in range(0,k):
+            first=nums[0]
+            for i in range(n-1):
+                nums[i] = nums[i+1]
+            nums[n-1] = first
+            
+#Time complexity : O(n)
+#Auxiliary Space : O(d) 
