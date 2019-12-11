@@ -1,0 +1,21 @@
+# N-Repeated Element in Size 2N Array
+
+'''
+In a array A of size 2N, there are N+1 unique elements, and exactly one of these elements is repeated N times.
+
+Return the element repeated N times.
+'''
+
+class Solution:
+    def repeatedNTimes(self, A: List[int]) -> int:
+        n = len(A)/2
+        unq = set(A)
+        for a in unq:
+            flag=0
+            for x in A:
+                if(a==x):
+                    flag=flag+1
+            if(flag==n):
+                return a
+                    
+            
