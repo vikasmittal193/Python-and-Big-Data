@@ -64,6 +64,8 @@ which requires log N partitioning levels. At each level, the algorithm does abou
 selecting and copying elements from the left and right partitions, yielding N * log N comparisons.
 
 Merge sort requires O(N) additional memory elements for the temporary array of merged elements.
+
+For N elements, the number of levels is log N
 '''
 
 
