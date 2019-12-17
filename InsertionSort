@@ -1,0 +1,17 @@
+#insertion sort
+
+ilist =  [10, 2, 78, 4, 45, 32, 7, 11]
+print(ilist)
+
+for i in range(1,len(ilist)):
+    # as the first element in the list is assumed to be sorted, i and j starts with 1
+    for j in range(i, len(ilist)):
+        while((j>0) and (ilist[j]<ilist[j-1])):
+            # iterate till we get j=0 or A[j] > A[j-1]
+            temp = ilist[j-1]
+            ilist[j-1] = ilist[j]
+            ilist[j] = temp
+            j=j-1
+print(ilist)
+
+# similar to selection sort, it has time complexity or Big O notation as O(N^2)
