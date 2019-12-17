@@ -14,3 +14,9 @@ for i in range(0,len(listl)):
     listl[smallestIndex] = temp
     
 print(listl)
+
+'''
+The selection sort algorithm runtime is O(N^2)
+For each of those N - 1 outer loop executions, the inner loop executes an average of N/2 times.
+So the total number of comparisons is proportional to (N-1).N/2 or O(N^2)
+'''
