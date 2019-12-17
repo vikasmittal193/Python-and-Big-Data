@@ -1,11 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[13]:
-
-
 # merge sort
-
 def merge(numbers,i,j,k):
     mergedsize = k - i + 1
     mergednumbers = [None] * mergedsize
@@ -40,11 +36,6 @@ def merge(numbers,i,j,k):
         numbers[i+mergepos] = mergednumbers[mergepos]
         
         
-
-
-# In[14]:
-
-
 def mergesort(numbners, i , k):
     j = 0
     
@@ -67,15 +58,12 @@ if __name__ == "__main__":
     
     print(numbers)
 
+'''
+The merge sort algorithm's runtime is O(N log N). Merge sort divides the input in half until a list of 1 element is reached, 
+which requires log N partitioning levels. At each level, the algorithm does about N comparisons 
+selecting and copying elements from the left and right partitions, yielding N * log N comparisons.
 
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
+Merge sort requires O(N) additional memory elements for the temporary array of merged elements.
+'''
 
 
